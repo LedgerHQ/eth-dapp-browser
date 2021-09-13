@@ -9,15 +9,18 @@ import defaultTheme from "../styles/theme";
 import { GlobalStyle } from "../styles/GlobalStyle";
 
 import "modern-normalize";
+import { getQueryVariable } from "../src/helpers";
 
 export default function MyApp({ Component, pageProps }: AppProps): JSX.Element {
   const router = useRouter();
 
-  const { backgroundColor, textColor, theme: themeType } = router.query;
+  const { backgroundColor, textColor } = router.query;
+
+  const themeType = getQueryVariable("theme", router);
 
   const theme = useMemo(
     () => ({
-      type: themeType,
+      type: themeType || "light",
       colors: {
         ...defaultTheme.colors,
         background:

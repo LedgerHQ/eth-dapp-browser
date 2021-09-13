@@ -1,5 +1,3 @@
-export type ThemeType = typeof defaultTheme; // This is the type definition for my theme object.
-
 export const defaultTheme = {
   type: "light",
   colors: {
@@ -13,7 +11,17 @@ export const defaultTheme = {
 };
 
 declare module "styled-components" {
-  type DefaultTheme = ThemeType;
+  export interface DefaultTheme {
+    type: string;
+    colors: {
+      background: string;
+      text: string;
+      primary: string;
+      contrast: string;
+      alert: string;
+      warning: string;
+    };
+  }
 }
 
 export default defaultTheme;

@@ -8,7 +8,7 @@ type Props = {
   disabled?: boolean;
 };
 
-const Button = styled.button`
+const Button = styled.button<Props>`
   outline: none;
   border: none;
   border-radius: 4px;
