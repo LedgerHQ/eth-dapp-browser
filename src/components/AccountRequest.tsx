@@ -49,7 +49,11 @@ function AccountRequest({
         {selectedAccount ? (
           <>
             <AccountIcon>
-              <Image src="/icons/ethereum.svg" width={24} height={24} />
+              <Image
+                src={`/icons/${selectedAccount?.currency}.svg`}
+                width={24}
+                height={24}
+              />
             </AccountIcon>
             <AccountName>{selectedAccount?.name}</AccountName>
           </>
