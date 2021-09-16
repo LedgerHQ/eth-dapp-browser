@@ -50,12 +50,12 @@ function AccountRequest({
           <>
             <AccountIcon>
               <Image
-                src={`/icons/${selectedAccount?.currency}.svg`}
+                src={`/icons/${selectedAccount.currency}.svg`}
                 width={24}
                 height={24}
               />
             </AccountIcon>
-            <AccountName>{selectedAccount?.name}</AccountName>
+            <AccountName>{selectedAccount.name}</AccountName>
           </>
         ) : null}
       </AccountDisplay>
