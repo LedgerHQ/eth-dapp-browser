@@ -9,7 +9,6 @@ function DappBrowserPage() {
   const router = useRouter();
 
   const theme = getQueryVariable("theme", router);
-  const isMock = getQueryVariable("mock", router) === "true";
   const initialAccountId = getQueryVariable("accountId", router);
   const rawParams = getQueryVariable("params", router);
 
@@ -32,7 +31,6 @@ function DappBrowserPage() {
         nanoApp={nanoApp}
         theme={theme}
         chainConfigs={chainConfigs}
-        mock={isMock}
         initialAccountId={initialAccountId}
       />
     ) : null;
