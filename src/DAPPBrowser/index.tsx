@@ -186,7 +186,11 @@ export function DAPPBrowser({
       if (selectedAccount && chainConfig && event.origin === dappURL.origin) {
         const data = event.data;
 
-        console.log(`MESSAGE FROM APP ${data.method}`, data);
+        if (data.jsonrpc !== "2.0") {
+          return;
+        }
+
+        console.log(`MESSAGE FROM APP ${data.method}`, data, data.jsonrpc);
 
         switch (data.method) {
           case "eth_chainId": {
@@ -275,6 +279,7 @@ export function DAPPBrowser({
                 sendMessageToDAPP(answer.data);
               });
             }
+            break;
           }
         }
       }
@@ -331,13 +336,13 @@ export function DAPPBrowser({
     );
 
     const initialAccount = initialAccountId
-      ? accounts.find((account) => account.id === initialAccountId)
+      ? filteredAccounts.find((account) => account.id === initialAccountId)
       : undefined;
     const storedAccountId: string | null =
       typeof window !== "undefined" ? localStorage.getItem("accountId") : null;
     const storedAccount =
       storedAccountId !== null
-        ? accounts.find((account) => account.id === storedAccountId)
+        ? filteredAccounts.find((account) => account.id === storedAccountId)
         : undefined;
 
     const selectedAccount =

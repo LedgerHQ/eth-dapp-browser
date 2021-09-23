@@ -2,11 +2,18 @@ import { NextRouter } from "next/router";
 
 export function getQueryVariable(
   name: string,
-  router: NextRouter
+  router: NextRouter,
+  formater?: (variable: string) => any
 ): string | undefined {
   const queryVariable = router.query[name];
   if (queryVariable) {
-    return !Array.isArray(queryVariable) ? queryVariable : queryVariable[0];
+    const value = !Array.isArray(queryVariable)
+      ? queryVariable
+      : queryVariable[0];
+    if (formater) {
+      return formater(value);
+    }
+    return value;
   }
   return undefined;
 }
