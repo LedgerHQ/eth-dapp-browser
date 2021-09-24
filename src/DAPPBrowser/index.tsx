@@ -16,6 +16,7 @@ import LedgerLivePlarformSDK, {
 import AccountSelector from "../components/AccountSelector";
 import AccountRequest from "../components/AccountRequest";
 import ControlBar from "../components/ControlBar";
+import CookiesBlocked from "../components/CookiesBlocked";
 
 import { SmartWebsocket } from "./SmartWebsocket";
 import { convertEthToLiveTX } from "./helper";
@@ -100,6 +101,7 @@ type DAPPBrowserState = {
   clientLoaded: boolean;
   fetchingAccounts: boolean;
   connected: boolean;
+  cookiesBlocked: boolean;
 };
 
 const initialState = {
@@ -108,6 +110,7 @@ const initialState = {
   clientLoaded: false,
   fetchingAccounts: false,
   connected: false,
+  cookiesBlocked: false,
 };
 
 export function DAPPBrowser({
@@ -125,7 +128,32 @@ export function DAPPBrowser({
     clientLoaded,
     connected,
     fetchingAccounts,
+    cookiesBlocked,
   } = state;
+
+  const wrapThirdPartyCookiesErrorHandler =
+    <T extends unknown[], R>(cb: (...args: T) => R) =>
+    (...args: T) => {
+      try {
+        return cb(...args);
+      } catch (err) {
+        // specifically catch 'Access is denied...' error on `localStorage`
+        // (means that third-party cookies are disabled on host)
+        if (err instanceof DOMException && err.code === 18) {
+          setState((s) => ({ ...s, cookiesBlocked: true }));
+        } else {
+          throw err;
+        }
+      }
+    };
+
+  const localStorageSet = wrapThirdPartyCookiesErrorHandler(
+    (key: string, val: string) => localStorage.setItem(key, val)
+  );
+
+  const localStorageGet = wrapThirdPartyCookiesErrorHandler((key: string) =>
+    localStorage.getItem(key)
+  );
 
   const dappURL = useMemo(() => {
     const urlObject = new URL(dappUrl);
@@ -168,7 +196,7 @@ export function DAPPBrowser({
 
       if (account) {
         if (typeof window !== "undefined") {
-          localStorage.setItem("accountId", account.id);
+          localStorageSet("accountId", account.id);
         }
 
         sendMessageToDAPP({
@@ -339,7 +367,9 @@ export function DAPPBrowser({
       ? filteredAccounts.find((account) => account.id === initialAccountId)
       : undefined;
     const storedAccountId: string | null =
-      typeof window !== "undefined" ? localStorage.getItem("accountId") : null;
+      typeof window !== "undefined"
+        ? localStorageGet("accountId") || null
+        : null;
     const storedAccount =
       storedAccountId !== null
         ? filteredAccounts.find((account) => account.id === storedAccountId)
@@ -426,6 +456,10 @@ export function DAPPBrowser({
       }
     }
   }, [chainConfig, sendMessageToDAPP]);
+
+  if (cookiesBlocked) {
+    return <CookiesBlocked />;
+  }
 
   return (
     <AppLoaderPageContainer>
