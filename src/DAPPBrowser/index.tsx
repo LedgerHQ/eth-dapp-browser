@@ -256,22 +256,21 @@ export function DAPPBrowser({
           case "eth_sendTransaction": {
             const ethTX = data.params[0];
             const tx = convertEthToLiveTX(ethTX);
-            const fromAccount = accounts.find(
-              (account) =>
-                account.address.toLowerCase() === ethTX.from.toLowerCase()
-            );
-            if (fromAccount) {
+            if (
+              selectedAccount &&
+              selectedAccount.address.toLowerCase() === ethTX.from.toLowerCase()
+            ) {
               try {
                 if (ledgerAPIRef.current) {
                   const signedTransaction =
                     await ledgerAPIRef.current.signTransaction(
-                      fromAccount.id,
+                      selectedAccount.id,
                       tx,
                       { useApp: nanoApp }
                     );
                   const hash =
                     await ledgerAPIRef.current.broadcastSignedTransaction(
-                      fromAccount.id,
+                      selectedAccount.id,
                       signedTransaction
                     );
                   sendMessageToDAPP({
@@ -312,7 +311,14 @@ export function DAPPBrowser({
         }
       }
     },
-    [selectAccount, chainConfig, dappURL, accounts, sendMessageToDAPP]
+    [
+      selectAccount,
+      chainConfig,
+      selectedAccount,
+      dappURL,
+      accounts,
+      sendMessageToDAPP,
+    ]
   );
 
   const setClientLoaded = useCallback(() => {
