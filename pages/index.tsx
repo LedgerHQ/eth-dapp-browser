@@ -13,16 +13,24 @@ function DappBrowserPage() {
   const rawParams = getQueryVariable("params", router);
 
   const params = rawParams ? JSON.parse(rawParams) : {};
-  const chainConfigs: ChainConfig[] = params.networks;
+  const chainConfigs: ChainConfig[] = params.networks ?? [
+    {
+      chainID: 1,
+      currency: "ethereum",
+      nodeURL: "wss://eth-mainnet.ws.alchemyapi.io/v2/0fyudoTG94QWC0tEtfJViM9v2ZXJuij2",
+    }
+  ];
   const nanoApp = params.nanoApp;
   const dappUrl = params.dappUrl;
   const dappName = params.dappName || "DApp";
+
+  
 
   useEffect(() => {
     setMounted(true);
     return () => setMounted(false);
   }, []);
-
+  
   if (mounted) {
     return dappUrl ? (
       <DAPPBrowser

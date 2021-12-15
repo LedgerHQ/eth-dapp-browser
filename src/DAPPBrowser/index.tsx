@@ -266,7 +266,7 @@ export function DAPPBrowser({
                     await ledgerAPIRef.current.signTransaction(
                       selectedAccount.id,
                       tx,
-                      { useApp: nanoApp }
+                      { useApp: nanoApp! }
                     );
                   const hash =
                     await ledgerAPIRef.current.broadcastSignedTransaction(
@@ -286,6 +286,45 @@ export function DAPPBrowser({
                   error: {
                     code: 3,
                     message: "Transaction declined",
+                    data: [
+                      {
+                        code: 104,
+                        message: "Rejected",
+                      },
+                    ],
+                  },
+                });
+              }
+            }
+            break;
+          }
+          case "personal_sign": {
+            const message = data.params[0];
+            const address = data.params[1];
+            const rawMessage = data.params[2];
+            if (
+              selectedAccount &&
+              selectedAccount.address.toLowerCase() === address.toLowerCase()
+            ) {
+              try {
+                if (ledgerAPIRef.current) {
+                  const signedMessage =
+                    await ledgerAPIRef.current.signPersonalMessage(selectedAccount.id, message);
+                 
+                  sendMessageToDAPP({
+                    id: data.id,
+                    jsonrpc: "2.0",
+                    result: signedMessage.signature,
+                  });
+                }
+              } catch (error) {
+                console.error(error);
+                sendMessageToDAPP({
+                  id: data.id,
+                  jsonrpc: "2.0",
+                  error: {
+                    code: 3,
+                    message: "Request declined",
                     data: [
                       {
                         code: 104,
@@ -352,6 +391,7 @@ export function DAPPBrowser({
   }, [chainConfig]);
 
   const fetchAccounts = useCallback(async () => {
+    console.log("Fetching accounts...");
     if (!ledgerAPIRef.current) {
       return;
     }
