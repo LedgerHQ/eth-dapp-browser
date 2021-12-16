@@ -266,7 +266,7 @@ export function DAPPBrowser({
                     await ledgerAPIRef.current.signTransaction(
                       selectedAccount.id,
                       tx,
-                      { useApp: nanoApp! }
+                      { useApp: nanoApp }
                     );
                   const hash =
                     await ledgerAPIRef.current.broadcastSignedTransaction(
@@ -301,24 +301,26 @@ export function DAPPBrowser({
           case "personal_sign": {
             const message = data.params[0];
             const address = data.params[1];
-            const rawMessage = data.params[2];
+            // const password = data.params[2]; // This field isn't actually used, I think
             if (
               selectedAccount &&
               selectedAccount.address.toLowerCase() === address.toLowerCase()
             ) {
               try {
                 if (ledgerAPIRef.current) {
-                  const signedMessage =
-                    await ledgerAPIRef.current.signPersonalMessage(selectedAccount.id, message);
-                 
+                  const signature =
+                    await ledgerAPIRef.current.signPersonalMessage(
+                      selectedAccount.id,
+                      message
+                    );
+
                   sendMessageToDAPP({
                     id: data.id,
                     jsonrpc: "2.0",
-                    result: signedMessage.signature,
+                    result: signature,
                   });
                 }
               } catch (error) {
-                console.error(error);
                 sendMessageToDAPP({
                   id: data.id,
                   jsonrpc: "2.0",
@@ -391,7 +393,6 @@ export function DAPPBrowser({
   }, [chainConfig]);
 
   const fetchAccounts = useCallback(async () => {
-    console.log("Fetching accounts...");
     if (!ledgerAPIRef.current) {
       return;
     }
