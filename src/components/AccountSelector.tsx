@@ -1,7 +1,7 @@
 import Select, { components, OptionTypeBase } from "react-select";
 import React, { useMemo, useCallback } from "react";
 import Image from "next/image";
-import styled, { useTheme, DefaultTheme } from "styled-components";
+import styled, { useTheme } from "styled-components";
 import Color from "color";
 
 import { Account } from "@ledgerhq/live-app-sdk";
@@ -61,7 +61,7 @@ const AccountSummary: typeof components.SingleValue = ({
   </components.SingleValue>
 );
 
-const getSelectStyles = (theme: DefaultTheme) => ({
+const getSelectStyles = (theme: any) => ({
   control: (provided: any) => ({
     ...provided,
     width: 400,
@@ -73,7 +73,7 @@ const getSelectStyles = (theme: DefaultTheme) => ({
     flexDirection: "row",
     alignItems: "center",
     fontSize: 12,
-    color: theme.colors.text,
+    color: theme.colors.neutral.c100,
   }),
   indicatorsContainer: (provided: any) => ({
     ...provided,
@@ -81,7 +81,7 @@ const getSelectStyles = (theme: DefaultTheme) => ({
   }),
   menu: (provided: any) => ({
     ...provided,
-    backgroundColor: theme.colors.background,
+    backgroundColor: theme.colors.background.main,
   }),
   option: (
     provided: any,
@@ -92,11 +92,13 @@ const getSelectStyles = (theme: DefaultTheme) => ({
     flexDirection: "row",
     alignItems: "center",
     fontSize: 12,
-    color: isSelected ? "#fff" : theme.colors.text,
+    color: isSelected ? theme.colors.neutral.c100 : theme.colors.neutral.c80,
     backgroundColor: isSelected
-      ? new Color(theme.colors.primary).alpha(isFocused ? 0.8 : 1).string()
+      ? isFocused
+        ? theme.colors.primary.c50
+        : theme.colors.primary.c70
       : isFocused
-      ? new Color(theme.colors.primary).alpha(0.1).string()
+      ? theme.colors.primary.c10
       : "transparent",
   }),
 });
@@ -125,6 +127,7 @@ function AccountSelector({
   selectedAccount,
 }: AccountSelectorProps) {
   const theme = useTheme();
+  console.log(theme);
   const options = useMemo(
     () => accounts.map((account) => fromAccountToOption(account)),
     [accounts]

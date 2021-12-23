@@ -8,6 +8,7 @@ import React, {
 import styled, { keyframes } from "styled-components";
 import { JSONRPCRequest, JSONRPCResponse } from "json-rpc-2.0";
 import CSSTransition from "react-transition-group/CSSTransition";
+import { Text, Button, Flex } from "@ledgerhq/react-ui";
 
 import LedgerLivePlarformSDK, {
   WindowMessageTransport,
@@ -329,10 +330,6 @@ export function DAPPBrowser({
   }, [setState]);
 
   const requestAccount = useCallback(async () => {
-    if (!chainConfig) {
-      throw new Error("No chain config selected");
-    }
-
     const enabledCurrencies = chainConfigs.map(
       (chainConfig) => chainConfig.currency
     );
@@ -349,7 +346,7 @@ export function DAPPBrowser({
     } catch (error) {
       // TODO: handle error
     }
-  }, [chainConfig]);
+  }, [chainConfigs]);
 
   const fetchAccounts = useCallback(async () => {
     if (!ledgerAPIRef.current) {
@@ -365,36 +362,34 @@ export function DAPPBrowser({
     }));
 
     const accounts = await ledgerAPIRef.current.listAccounts();
+
+    // filter all accounts matching allowed currencies
     const filteredAccounts = accounts.filter((account: Account) =>
       enabledCurrencies.includes(account.currency)
     );
 
+    // check if there is a initial account
     const initialAccount = initialAccountId
       ? filteredAccounts.find((account) => account.id === initialAccountId)
       : undefined;
+
+    // get accountId from localstorage
     const storedAccountId: string | null =
       typeof window !== "undefined"
         ? localStorageGet("accountId") || null
         : null;
+
+    // check if an account was saved in localstotage
     const storedAccount =
       storedAccountId !== null
         ? filteredAccounts.find((account) => account.id === storedAccountId)
         : undefined;
 
+    // establish the selected account by order of importance
     const selectedAccount =
       filteredAccounts.length > 0
         ? initialAccount || storedAccount || filteredAccounts[0]
         : undefined;
-
-    const selectedChainConfig = selectedAccount
-      ? chainConfigs.find(
-          (chainConfig) => chainConfig.currency === selectedAccount.currency
-        )
-      : undefined;
-
-    if (!selectedChainConfig) {
-      throw new Error("No chain config selected");
-    }
 
     setState((currentState) => ({
       ...currentState,
@@ -481,15 +476,31 @@ export function DAPPBrowser({
       <DappContainer>
         <CSSTransition in={clientLoaded} timeout={300} classNames="overlay">
           <Overlay>
-            <Loader>
-              {!connected
-                ? "Connecting ..."
-                : fetchingAccounts
-                ? "Loading accounts ..."
-                : accounts.length === 0
-                ? "You don't have any accounts"
-                : `Loading ${dappName} ...`}
-            </Loader>
+            {!connected ? (
+              <Loader>
+                <Text color="neutral.c100">{"Connecting ..."}</Text>
+              </Loader>
+            ) : fetchingAccounts ? (
+              <Loader>
+                <Text color="neutral.c100">{"Loading accounts ..."}</Text>
+              </Loader>
+            ) : accounts.length === 0 ? (
+              <Flex flexDirection="column" alignItems="center">
+                <Text mb={6} color="neutral.c100">
+                  {"You need an account to access this app."}
+                </Text>
+                <Button onClick={requestAccount} variant="main">
+                  {"Add Account"}
+                </Button>
+              </Flex>
+            ) : (
+              <Loader>
+                <Text
+                  variant="h5"
+                  color="neutral.c100"
+                >{`Loading ${dappName} ...`}</Text>
+              </Loader>
+            )}
           </Overlay>
         </CSSTransition>
         {connected && accounts.length > 0 ? (
