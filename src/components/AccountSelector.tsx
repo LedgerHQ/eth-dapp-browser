@@ -2,7 +2,6 @@ import Select, { components, OptionTypeBase } from "react-select";
 import React, { useMemo, useCallback } from "react";
 import Image from "next/image";
 import styled, { useTheme } from "styled-components";
-import Color from "color";
 
 import { Account } from "@ledgerhq/live-app-sdk";
 
@@ -14,7 +13,7 @@ const IconContainer = styled.div`
 const AccountDetails = styled.div`
   display: flex;
   flex-direction: column;
-  align-item: flex-start;
+  align-items: flex-start;
   flex-grow: 1;
 `;
 
