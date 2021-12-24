@@ -1,12 +1,10 @@
-import React, { useMemo } from "react";
+import React from "react";
 import { useRouter } from "next/router";
 import { AppProps } from "next/app";
 import Head from "next/head";
 
-import { ThemeProvider } from "styled-components";
-
-import defaultTheme from "../styles/theme";
 import { GlobalStyle } from "../styles/GlobalStyle";
+import { StyleProvider } from "@ledgerhq/react-ui";
 
 import "modern-normalize";
 import { getQueryVariable } from "../src/helpers";
@@ -14,25 +12,9 @@ import { getQueryVariable } from "../src/helpers";
 export default function MyApp({ Component, pageProps }: AppProps): JSX.Element {
   const router = useRouter();
 
-  const { backgroundColor, textColor } = router.query;
-
-  const themeType = getQueryVariable("theme", router);
-
-  const theme = useMemo(
-    () => ({
-      type: themeType || "light",
-      colors: {
-        ...defaultTheme.colors,
-        background:
-          typeof backgroundColor === "string"
-            ? backgroundColor
-            : defaultTheme.colors.background,
-        text:
-          typeof textColor === "string" ? textColor : defaultTheme.colors.text,
-      },
-    }),
-    [backgroundColor, textColor]
-  );
+  const themeType = (getQueryVariable("theme", router) || "dark") as
+    | "light"
+    | "dark";
 
   return (
     <>
@@ -48,10 +30,10 @@ export default function MyApp({ Component, pageProps }: AppProps): JSX.Element {
           rel="stylesheet"
         />
       </Head>
-      <ThemeProvider theme={theme}>
+      <StyleProvider selectedPalette={themeType} fontsPath="/fonts">
         <GlobalStyle />
         <Component {...pageProps} />
-      </ThemeProvider>
+      </StyleProvider>
     </>
   );
 }

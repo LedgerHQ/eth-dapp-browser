@@ -3,7 +3,7 @@ import styled from "styled-components";
 import Image from "next/image";
 
 import { Account } from "@ledgerhq/live-app-sdk";
-import Button from "../components/Button";
+import { Button, Text } from "@ledgerhq/react-ui";
 
 const Row = styled.div`
   width: 100%;
@@ -29,9 +29,10 @@ const AccountIcon = styled.div`
   flex-shrink: 0;
 `;
 
-const AccountName = styled.span`
+const AccountName = styled(Text)`
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
 `;
 
 type AccountRequestProps = {
@@ -59,7 +60,7 @@ function AccountRequest({
           </>
         ) : null}
       </AccountDisplay>
-      <Button transparent small onClick={onRequestAccount}>
+      <Button variant="shade" onClick={onRequestAccount}>
         {selectedAccount ? "Change account" : "Add Account"}
       </Button>
     </Row>
