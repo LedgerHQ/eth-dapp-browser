@@ -10,11 +10,6 @@ const DappBrowserControlBar = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: flex-start;
-  border-bottom: 1px solid
-    ${(p) =>
-      p.theme.type === "dark"
-        ? "rgba(255, 255, 255, 0.1)"
-        : "rgba(20, 37, 51, 0.1)"};
 
   ${(p: { desktop?: boolean; mobile?: boolean }) =>
     p.desktop &&
@@ -34,6 +29,18 @@ const DappBrowserControlBar = styled.div`
 
 ${mobileMQ} {
     padding: 12px;
+    border-top: 1px solid
+      ${(p) =>
+        p.theme.theme === "dark"
+          ? "rgba(255, 255, 255, 0.1)"
+          : "rgba(20, 37, 51, 0.1)"};
+  }
+  ${desktopMQ} {
+    border-bottom: 1px solid
+      ${(p) =>
+        p.theme.theme === "dark"
+          ? "rgba(255, 255, 255, 0.1)"
+          : "rgba(20, 37, 51, 0.1)"};
   }
 `;
 
