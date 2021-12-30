@@ -348,7 +348,13 @@ export function DAPPBrowser({
          *
          * FIXME: this whole flow / hanldeling of newly added accounts could be improved by extending SDK capabilities
          */
-        account.id ? selectAccount(account) : fetchAccounts();
+        if (!account.id || !accounts.length) {
+          fetchAccounts();
+        }
+
+        if (account.id) {
+          selectAccount(account);
+        }
       }
     } catch (error) {
       // TODO: handle error
