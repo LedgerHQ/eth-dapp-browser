@@ -341,7 +341,20 @@ export function DAPPBrowser({
       };
       if (ledgerAPIRef.current) {
         const account = await ledgerAPIRef.current.requestAccount(payload);
-        selectAccount(account);
+
+        /**
+         * If requestAccount returns an empty account object (i.e: all fields are null or undifined,
+         * especillay the id), this means a new account has been added and we should refetch the accounts list
+         *
+         * FIXME: this whole flow / hanldeling of newly added accounts could be improved by extending SDK capabilities
+         */
+        if (!account.id || !accounts.length) {
+          fetchAccounts();
+        }
+
+        if (account.id) {
+          selectAccount(account);
+        }
       }
     } catch (error) {
       // TODO: handle error
