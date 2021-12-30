@@ -126,7 +126,6 @@ function AccountSelector({
   selectedAccount,
 }: AccountSelectorProps) {
   const theme = useTheme();
-  console.log(theme);
   const options = useMemo(
     () => accounts.map((account) => fromAccountToOption(account)),
     [accounts]
