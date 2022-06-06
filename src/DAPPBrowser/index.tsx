@@ -231,25 +231,13 @@ export function DAPPBrowser({
           }
           // https://eips.ethereum.org/EIPS/eip-1102
           // https://docs.metamask.io/guide/rpc-api.html#eth-requestaccounts
-          case "eth_requestAccounts": {
-            sendMessageToDAPP({
-              id: data.id,
-              jsonrpc: "2.0",
-              result: [selectedAccount.address],
-            });
-            break;
-          }
+          case "eth_requestAccounts":
           // legacy method, cf. https://docs.metamask.io/guide/ethereum-provider.html#legacy-methods
-          case "enable": {
-            sendMessageToDAPP({
-              id: data.id,
-              jsonrpc: "2.0",
-              result: [selectedAccount.address],
-            });
-            break;
-          }
+          // eslint-disbale-next-line eslintno-fallthrough
+          case "enable":
           // https://eips.ethereum.org/EIPS/eip-1474#eth_accounts
           // https://eth.wiki/json-rpc/API#eth_accounts
+          // eslint-disbale-next-line eslintno-fallthrough
           case "eth_accounts": {
             sendMessageToDAPP({
               id: data.id,
