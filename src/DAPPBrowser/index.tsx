@@ -1,28 +1,26 @@
+import LedgerLivePlarformSDK, {
+  Account,
+  WindowMessageTransport,
+} from "@ledgerhq/live-app-sdk";
+import { Button, Flex, Text } from "@ledgerhq/react-ui";
+import axios from "axios";
+import { JSONRPCRequest, JSONRPCResponse } from "json-rpc-2.0";
 import React, {
   useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
-  useMemo,
 } from "react";
-import styled, { keyframes } from "styled-components";
-import { JSONRPCRequest, JSONRPCResponse } from "json-rpc-2.0";
 import CSSTransition from "react-transition-group/CSSTransition";
-import { Text, Button, Flex } from "@ledgerhq/react-ui";
-
-import LedgerLivePlarformSDK, {
-  WindowMessageTransport,
-  Account,
-} from "@ledgerhq/live-app-sdk";
-import AccountSelector from "../components/AccountSelector";
+import styled, { keyframes } from "styled-components";
 import AccountRequest from "../components/AccountRequest";
+import AccountSelector from "../components/AccountSelector";
 import ControlBar from "../components/ControlBar";
 import CookiesBlocked from "../components/CookiesBlocked";
-
-import { SmartWebsocket } from "./SmartWebsocket";
 import { convertEthToLiveTX } from "./helper";
+import { SmartWebsocket } from "./SmartWebsocket";
 import { ChainConfig } from "./types";
-import axios from "axios";
 
 const loading = keyframes`
   0% { opacity:0.8; }
@@ -222,6 +220,7 @@ export function DAPPBrowser({
         console.log(`MESSAGE FROM APP ${data.method}`, data, data.jsonrpc);
 
         switch (data.method) {
+          // https://eips.ethereum.org/EIPS/eip-695
           case "eth_chainId": {
             sendMessageToDAPP({
               id: data.id,
@@ -230,22 +229,15 @@ export function DAPPBrowser({
             });
             break;
           }
-          case "eth_requestAccounts": {
-            sendMessageToDAPP({
-              id: data.id,
-              jsonrpc: "2.0",
-              result: [selectedAccount.address],
-            });
-            break;
-          }
-          case "enable": {
-            sendMessageToDAPP({
-              id: data.id,
-              jsonrpc: "2.0",
-              result: [selectedAccount.address],
-            });
-            break;
-          }
+          // https://eips.ethereum.org/EIPS/eip-1102
+          // https://docs.metamask.io/guide/rpc-api.html#eth-requestaccounts
+          case "eth_requestAccounts":
+          // legacy method, cf. https://docs.metamask.io/guide/ethereum-provider.html#legacy-methods
+          // eslint-disbale-next-line eslintno-fallthrough
+          case "enable":
+          // https://eips.ethereum.org/EIPS/eip-1474#eth_accounts
+          // https://eth.wiki/json-rpc/API#eth_accounts
+          // eslint-disbale-next-line eslintno-fallthrough
           case "eth_accounts": {
             sendMessageToDAPP({
               id: data.id,
@@ -254,6 +246,7 @@ export function DAPPBrowser({
             });
             break;
           }
+          // https://eth.wiki/json-rpc/API#eth_sendtransaction
           case "eth_sendTransaction": {
             const ethTX = data.params[0];
             const tx = convertEthToLiveTX(ethTX);
