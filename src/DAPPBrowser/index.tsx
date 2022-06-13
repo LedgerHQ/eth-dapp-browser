@@ -292,6 +292,38 @@ export function DAPPBrowser({
             }
             break;
           }
+          case "personal_sign": {
+            try {
+              if (ledgerAPIRef.current) {
+                const message = data.params[0];
+                const signedMessage = await ledgerAPIRef.current.signMessage(
+                  selectedAccount.id,
+                  message
+                );
+                sendMessageToDAPP({
+                  id: data.id,
+                  jsonrpc: "2.0",
+                  result: signedMessage,
+                });
+              }
+            } catch (error) {
+              sendMessageToDAPP({
+                id: data.id,
+                jsonrpc: "2.0",
+                error: {
+                  code: 3,
+                  message: "Personal message signed declined",
+                  data: [
+                    {
+                      code: 104,
+                      message: "Rejected",
+                    },
+                  ],
+                },
+              });
+            }
+            break;
+          }
           default: {
             if (connector.current) {
               connector.current.send(data);
