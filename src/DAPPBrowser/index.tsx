@@ -285,11 +285,12 @@ export function DAPPBrowser({
             ) {
               try {
                 if (ledgerAPIRef.current) {
+                  const params = nanoApp ? { useApp: nanoApp } : undefined;
                   const signedTransaction =
                     await ledgerAPIRef.current.signTransaction(
                       selectedAccount.id,
                       tx,
-                      { useApp: nanoApp }
+                      params
                     );
                   const hash =
                     await ledgerAPIRef.current.broadcastSignedTransaction(
