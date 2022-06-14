@@ -4,7 +4,12 @@ import LedgerLivePlarformSDK, {
 } from "@ledgerhq/live-app-sdk";
 import { Button, Flex, Text } from "@ledgerhq/react-ui";
 import axios from "axios";
-import { JSONRPCRequest, JSONRPCResponse } from "json-rpc-2.0";
+import {
+  JSONRPC,
+  JSONRPCError,
+  JSONRPCRequest,
+  JSONRPCResponse,
+} from "json-rpc-2.0";
 import React, {
   useCallback,
   useEffect,
@@ -119,7 +124,7 @@ export function DAPPBrowser({
   nanoApp,
   initialAccountId,
   chainConfigs,
-}: DAPPBrowserProps) {
+}: DAPPBrowserProps): React.ReactElement {
   const [state, setState] = useState<DAPPBrowserState>(initialState);
   const {
     accounts,
@@ -186,6 +191,30 @@ export function DAPPBrowser({
     [dappURL]
   );
 
+  type ResponseToDAPP = {
+    id: string;
+    result?: string;
+    error?: JSONRPCError;
+  };
+  const sendResponseToDAPP = ({ id, result, error }: ResponseToDAPP) => {
+    sendMessageToDAPP({
+      id,
+      jsonrpc: JSONRPC,
+      result,
+      error,
+    });
+  };
+  const rejectedError = (message: string): JSONRPCError => ({
+    code: 3,
+    message,
+    data: [
+      {
+        code: 104,
+        message: "Rejected",
+      },
+    ],
+  });
+
   const selectAccount = useCallback(
     (account: Account | undefined) => {
       setState((currentState) => ({
@@ -199,7 +228,7 @@ export function DAPPBrowser({
         }
 
         sendMessageToDAPP({
-          jsonrpc: "2.0",
+          jsonrpc: JSONRPC,
           method: "accountsChanged",
           params: [[account.address]],
         });
@@ -274,19 +303,9 @@ export function DAPPBrowser({
                   });
                 }
               } catch (error) {
-                sendMessageToDAPP({
+                sendResponseToDAPP({
                   id: data.id,
-                  jsonrpc: "2.0",
-                  error: {
-                    code: 3,
-                    message: "Transaction declined",
-                    data: [
-                      {
-                        code: 104,
-                        message: "Rejected",
-                      },
-                    ],
-                  },
+                  error: rejectedError("Transaction declined"),
                 });
               }
             }
@@ -300,26 +319,12 @@ export function DAPPBrowser({
                   selectedAccount.id,
                   message
                 );
-                sendMessageToDAPP({
-                  id: data.id,
-                  jsonrpc: "2.0",
-                  result: signedMessage,
-                });
+                sendResponseToDAPP({ id: data.id, result: signedMessage });
               }
             } catch (error) {
-              sendMessageToDAPP({
+              sendResponseToDAPP({
                 id: data.id,
-                jsonrpc: "2.0",
-                error: {
-                  code: 3,
-                  message: "Personal message signed declined",
-                  data: [
-                    {
-                      code: 104,
-                      message: "Rejected",
-                    },
-                  ],
-                },
+                error: rejectedError("Personal message signed declined"),
               });
             }
             break;
