@@ -312,6 +312,10 @@ export function DAPPBrowser({
             }
             break;
           }
+          // https://ethereum.org/en/developers/docs/apis/json-rpc/#eth_sign
+          // https://docs.walletconnect.com/json-rpc-api-methods/ethereum
+          // Discussion about the diff between eth_sign and personal_sign:
+          //   https://github.com/WalletConnect/walletconnect-docs/issues/32#issuecomment-644697172
           case "personal_sign": {
             try {
               if (ledgerAPIRef.current) {
