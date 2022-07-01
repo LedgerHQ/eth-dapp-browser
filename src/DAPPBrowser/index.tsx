@@ -23,7 +23,7 @@ import AccountRequest from "../components/AccountRequest";
 import AccountSelector from "../components/AccountSelector";
 import ControlBar from "../components/ControlBar";
 import CookiesBlocked from "../components/CookiesBlocked";
-import { convertEthToLiveTX } from "./helper";
+import { convertEthToLiveTX, msgHexToText } from "./helper";
 import { SmartWebsocket } from "./SmartWebsocket";
 import { ChainConfig } from "./types";
 
@@ -315,11 +315,12 @@ export function DAPPBrowser({
           // https://ethereum.org/en/developers/docs/apis/json-rpc/#eth_sign
           // https://docs.walletconnect.com/json-rpc-api-methods/ethereum
           // Discussion about the diff between eth_sign and personal_sign:
-          //   https://github.com/WalletConnect/walletconnect-docs/issues/32#issuecomment-644697172
+          // https://github.com/WalletConnect/walletconnect-docs/issues/32#issuecomment-644697172
           case "personal_sign": {
             try {
               if (ledgerAPIRef.current) {
-                const message = data.params[0];
+                const message = msgHexToText(data.params[0]);
+
                 const signedMessage = await ledgerAPIRef.current.signMessage(
                   selectedAccount.id,
                   message
