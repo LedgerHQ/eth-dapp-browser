@@ -335,6 +335,28 @@ export function DAPPBrowser({
             }
             break;
           }
+
+          // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-712.md
+          case data.method.match(/eth_signTypedData(_v.)?$/)?.input: {
+            try {
+              if (ledgerAPIRef.current) {
+                const message = data.params[1];
+
+                const signedMessage = await ledgerAPIRef.current.signMessage(
+                  selectedAccount.id,
+                  message
+                );
+                sendResponseToDAPP({ id: data.id, result: signedMessage });
+              }
+            } catch (error) {
+              sendResponseToDAPP({
+                id: data.id,
+                error: rejectedError("Personal message signed declined"),
+              });
+            }
+            break;
+          }
+
           default: {
             if (connector.current) {
               connector.current.send(data);
