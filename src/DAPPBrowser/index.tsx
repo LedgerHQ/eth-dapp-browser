@@ -357,6 +357,10 @@ export function DAPPBrowser({
             break;
           }
 
+          case "wallet_switchEthereumChain": {
+            break;
+          }
+
           default: {
             if (connector.current) {
               connector.current.send(data);
