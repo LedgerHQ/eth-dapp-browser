@@ -10,10 +10,11 @@
     "format:fix": "prettier --write 'src/**' 'pages/**'",
     "lint:check": "eslint --cache src/** pages/**",
     "lint:fix": "eslint --cache --fix src/** pages/**",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "postinstall": "cd node_modules/@ledgerhq/live-app-sdk && NODE_ENV=production yarn build && cp ./src/mock/mocks.json ./dist/mock"
   },
   "dependencies": {
-    "@ledgerhq/live-app-sdk": "^0.2.0",
+    "@ledgerhq/live-app-sdk": "LedgerHQ/live-app-sdk#3d2e8cd4b1fbe3db6509090e38bf984bc02b3bb7",
     "@ledgerhq/react-ui": "^0.7.0",
     "axios": "^0.21.1",
     "bignumber.js": "^9.0.2",
