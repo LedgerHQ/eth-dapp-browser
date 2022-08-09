@@ -36,21 +36,11 @@ const isHexPrefixed = (str: string): boolean => {
 };
 
 // Copied from https://www.npmjs.com/package/ethereumjs-util
-const stripHexPrefix = (str: string): string => {
+export const stripHexPrefix = (str: string): string => {
   if (typeof str !== "string")
     throw new Error(
       `[stripHexPrefix] input must be type 'string', received ${typeof str}`
     );
 
   return isHexPrefixed(str) ? str.slice(2) : str;
-};
-
-export const msgHexToText = (hex: string): string => {
-  try {
-    const stripped = stripHexPrefix(hex);
-    const buff = Buffer.from(stripped, "hex");
-    return buff.length === 32 ? hex : buff.toString("utf8");
-  } catch (e) {
-    return hex;
-  }
 };

@@ -23,7 +23,7 @@ import AccountRequest from "../components/AccountRequest";
 import AccountSelector from "../components/AccountSelector";
 import ControlBar from "../components/ControlBar";
 import CookiesBlocked from "../components/CookiesBlocked";
-import { convertEthToLiveTX, msgHexToText } from "./helper";
+import { convertEthToLiveTX, stripHexPrefix } from "./helper";
 import { SmartWebsocket } from "./SmartWebsocket";
 import { ChainConfig } from "./types";
 
@@ -319,11 +319,11 @@ export function DAPPBrowser({
           case "personal_sign": {
             try {
               if (ledgerAPIRef.current) {
-                const message = msgHexToText(data.params[0]);
+                const message = stripHexPrefix(data.params[0]);
 
                 const signedMessage = await ledgerAPIRef.current.signMessage(
                   selectedAccount.id,
-                  message
+                  Buffer.from(message)
                 );
                 sendResponseToDAPP({ id: data.id, result: signedMessage });
               }
