@@ -326,9 +326,10 @@
     "@types/styled-components" "^5.1.14"
     styled-components "^5.2.3"
 
-"@ledgerhq/live-app-sdk@LedgerHQ/live-app-sdk#3d2e8cd4b1fbe3db6509090e38bf984bc02b3bb7":
-  version "0.7.0"
-  resolved "https://codeload.github.com/LedgerHQ/live-app-sdk/tar.gz/3d2e8cd4b1fbe3db6509090e38bf984bc02b3bb7"
+"@ledgerhq/live-app-sdk@0.8.1":
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/@ledgerhq/live-app-sdk/-/live-app-sdk-0.8.1.tgz#e51d2ae014b551425aa0a71cd2c2825f6a751133"
+  integrity sha512-RYQS76VPu/e0+KHi8/Q1yFjdxOUENxxP21ncSjHBRbyLbF/CfD7WDGTsoYv3dCMS7em14Sg3mxOv1P2uaCbCVw==
   dependencies:
     bignumber.js "^9.0.2"
     json-rpc-2.0 "^1.1.0"
