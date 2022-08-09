@@ -1,6 +1,6 @@
+import { EthereumTransaction, FAMILIES } from "@ledgerhq/live-app-sdk";
 import { BigNumber } from "bignumber.js";
 import eip55 from "eip55";
-import { EthereumTransaction, FAMILIES } from "@ledgerhq/live-app-sdk";
 
 export function convertEthToLiveTX(ethTX: any): EthereumTransaction {
   return {
@@ -23,3 +23,24 @@ export function convertEthToLiveTX(ethTX: any): EthereumTransaction {
       : undefined,
   };
 }
+
+// Copied from https://www.npmjs.com/package/ethereumjs-util
+const isHexPrefixed = (str: string): boolean => {
+  if (typeof str !== "string") {
+    throw new Error(
+      `[isHexPrefixed] input must be type 'string', received type ${typeof str}`
+    );
+  }
+
+  return str[0] === "0" && str[1] === "x";
+};
+
+// Copied from https://www.npmjs.com/package/ethereumjs-util
+export const stripHexPrefix = (str: string): string => {
+  if (typeof str !== "string")
+    throw new Error(
+      `[stripHexPrefix] input must be type 'string', received ${typeof str}`
+    );
+
+  return isHexPrefixed(str) ? str.slice(2) : str;
+};

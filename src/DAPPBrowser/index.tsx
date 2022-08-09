@@ -4,7 +4,12 @@ import LedgerLivePlarformSDK, {
 } from "@ledgerhq/live-app-sdk";
 import { Button, Flex, Text } from "@ledgerhq/react-ui";
 import axios from "axios";
-import { JSONRPCRequest, JSONRPCResponse } from "json-rpc-2.0";
+import {
+  JSONRPC,
+  JSONRPCError,
+  JSONRPCRequest,
+  JSONRPCResponse,
+} from "json-rpc-2.0";
 import React, {
   useCallback,
   useEffect,
@@ -18,7 +23,7 @@ import AccountRequest from "../components/AccountRequest";
 import AccountSelector from "../components/AccountSelector";
 import ControlBar from "../components/ControlBar";
 import CookiesBlocked from "../components/CookiesBlocked";
-import { convertEthToLiveTX } from "./helper";
+import { convertEthToLiveTX, stripHexPrefix } from "./helper";
 import { SmartWebsocket } from "./SmartWebsocket";
 import { ChainConfig } from "./types";
 
@@ -119,7 +124,7 @@ export function DAPPBrowser({
   nanoApp,
   initialAccountId,
   chainConfigs,
-}: DAPPBrowserProps) {
+}: DAPPBrowserProps): React.ReactElement {
   const [state, setState] = useState<DAPPBrowserState>(initialState);
   const {
     accounts,
@@ -186,6 +191,30 @@ export function DAPPBrowser({
     [dappURL]
   );
 
+  type ResponseToDAPP = {
+    id: string;
+    result?: string;
+    error?: JSONRPCError;
+  };
+  const sendResponseToDAPP = ({ id, result, error }: ResponseToDAPP) => {
+    sendMessageToDAPP({
+      id,
+      jsonrpc: JSONRPC,
+      result,
+      error,
+    });
+  };
+  const rejectedError = (message: string): JSONRPCError => ({
+    code: 3,
+    message,
+    data: [
+      {
+        code: 104,
+        message: "Rejected",
+      },
+    ],
+  });
+
   const selectAccount = useCallback(
     (account: Account | undefined) => {
       setState((currentState) => ({
@@ -199,7 +228,7 @@ export function DAPPBrowser({
         }
 
         sendMessageToDAPP({
-          jsonrpc: "2.0",
+          jsonrpc: JSONRPC,
           method: "accountsChanged",
           params: [[account.address]],
         });
@@ -256,11 +285,12 @@ export function DAPPBrowser({
             ) {
               try {
                 if (ledgerAPIRef.current) {
+                  const params = nanoApp ? { useApp: nanoApp } : undefined;
                   const signedTransaction =
                     await ledgerAPIRef.current.signTransaction(
                       selectedAccount.id,
                       tx,
-                      { useApp: nanoApp }
+                      params
                     );
                   const hash =
                     await ledgerAPIRef.current.broadcastSignedTransaction(
@@ -274,21 +304,34 @@ export function DAPPBrowser({
                   });
                 }
               } catch (error) {
-                sendMessageToDAPP({
+                sendResponseToDAPP({
                   id: data.id,
-                  jsonrpc: "2.0",
-                  error: {
-                    code: 3,
-                    message: "Transaction declined",
-                    data: [
-                      {
-                        code: 104,
-                        message: "Rejected",
-                      },
-                    ],
-                  },
+                  error: rejectedError("Transaction declined"),
                 });
               }
+            }
+            break;
+          }
+          // https://ethereum.org/en/developers/docs/apis/json-rpc/#eth_sign
+          // https://docs.walletconnect.com/json-rpc-api-methods/ethereum
+          // Discussion about the diff between eth_sign and personal_sign:
+          // https://github.com/WalletConnect/walletconnect-docs/issues/32#issuecomment-644697172
+          case "personal_sign": {
+            try {
+              if (ledgerAPIRef.current) {
+                const message = stripHexPrefix(data.params[0]);
+
+                const signedMessage = await ledgerAPIRef.current.signMessage(
+                  selectedAccount.id,
+                  Buffer.from(message)
+                );
+                sendResponseToDAPP({ id: data.id, result: signedMessage });
+              }
+            } catch (error) {
+              sendResponseToDAPP({
+                id: data.id,
+                error: rejectedError("Personal message signed declined"),
+              });
             }
             break;
           }
