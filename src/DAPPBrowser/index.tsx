@@ -275,6 +275,61 @@ export function DAPPBrowser({
             });
             break;
           }
+
+          // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-3326.md
+          case "wallet_switchEthereumChain": {
+            const { chainId } = data.params[0];
+
+            // Check chanId is valid hex string
+            const decimalChainId = parseInt(chainId, 16);
+
+            if (isNaN(decimalChainId)) {
+              sendResponseToDAPP({
+                id: data.id,
+                error: rejectedError("Invalid chainId"),
+              });
+              break;
+            }
+
+            // Check chain ID is known to the wallet
+            const chainConfig = chainConfigs.find(
+              (config) => config.chainID === decimalChainId
+            );
+
+            if (!chainConfig) {
+              sendResponseToDAPP({
+                id: data.id,
+                error: rejectedError(`Chain ID ${chainId} is not supported`),
+              });
+              break;
+            }
+
+            try {
+              if (ledgerAPIRef.current) {
+                const requestedAccount =
+                  await ledgerAPIRef.current.requestAccount({
+                    currencies: [chainConfig.currency],
+                    allowAddAccount: true,
+                  });
+
+                selectAccount(requestedAccount);
+
+                sendMessageToDAPP({
+                  id: data.id,
+                  jsonrpc: "2.0",
+                  result: null,
+                });
+              }
+            } catch (error) {
+              sendResponseToDAPP({
+                id: data.id,
+                error: rejectedError(`error switching chain: ${error}`),
+              });
+            }
+
+            break;
+          }
+
           // https://eth.wiki/json-rpc/API#eth_sendtransaction
           case "eth_sendTransaction": {
             const ethTX = data.params[0];
