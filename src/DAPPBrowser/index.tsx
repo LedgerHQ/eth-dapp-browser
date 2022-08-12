@@ -374,7 +374,16 @@ export function DAPPBrowser({
           case "personal_sign": {
             try {
               if (ledgerAPIRef.current) {
-                const message = stripHexPrefix(data.params[0]);
+                /**
+                 * The message is received as a hex string, we need to strip the
+                 * "0x" prefix and convert it to a string.
+                 * Because SDK signMessage function take the message to sign as
+                 * a Buffer of the text message
+                 */
+                const message = Buffer.from(
+                  stripHexPrefix(data.params[0]),
+                  "hex"
+                ).toString();
 
                 const signedMessage = await ledgerAPIRef.current.signMessage(
                   selectedAccount.id,
