@@ -367,6 +367,7 @@ export function DAPPBrowser({
             }
             break;
           }
+          // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-191.md
           // https://ethereum.org/en/developers/docs/apis/json-rpc/#eth_sign
           // https://docs.walletconnect.com/json-rpc-api-methods/ethereum
           // Discussion about the diff between eth_sign and personal_sign:
@@ -374,11 +375,15 @@ export function DAPPBrowser({
           case "personal_sign": {
             try {
               if (ledgerAPIRef.current) {
+                /**
+                 * The message is received as a prefixed hex string.
+                 * We need to strip the "0x" prefix.
+                 */
                 const message = stripHexPrefix(data.params[0]);
 
                 const signedMessage = await ledgerAPIRef.current.signMessage(
                   selectedAccount.id,
-                  Buffer.from(message)
+                  Buffer.from(message, "hex")
                 );
                 sendResponseToDAPP({ id: data.id, result: signedMessage });
               }
