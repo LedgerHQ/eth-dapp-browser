@@ -2,7 +2,6 @@ import LedgerLivePlarformSDK, {
   Account,
   WindowMessageTransport,
 } from "@ledgerhq/live-app-sdk";
-import { Button, Flex, Text } from "@ledgerhq/react-ui";
 import axios from "axios";
 import {
   JSONRPC,
@@ -17,8 +16,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import CSSTransition from "react-transition-group/CSSTransition";
-import styled, { keyframes } from "styled-components";
+import styled from "styled-components";
 import AccountRequest from "../components/AccountRequest";
 import AccountSelector from "../components/AccountSelector";
 import ControlBar from "../components/ControlBar";
@@ -27,11 +25,11 @@ import { convertEthToLiveTX, stripHexPrefix } from "./helper";
 import { SmartWebsocket } from "./SmartWebsocket";
 import { ChainConfig } from "./types";
 
-const loading = keyframes`
-  0% { opacity:0.8; }
-  50% { opacity:0.4; }
-  100% { opacity:0.8; }
-`;
+// const loading = keyframes`
+//   0% { opacity:0.8; }
+//   50% { opacity:0.4; }
+//   100% { opacity:0.8; }
+// `;
 
 const AppLoaderPageContainer = styled.div`
   height: 100%;
@@ -39,44 +37,44 @@ const AppLoaderPageContainer = styled.div`
   flex-direction: column;
 `;
 
-const Loader = styled.div`
-  animation: ${loading} 1s ease-in-out infinite;
-`;
+// const Loader = styled.div`
+//   animation: ${loading} 1s ease-in-out infinite;
+// `;
 
-const Overlay = styled.div`
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
+// const Overlay = styled.div`
+//   position: absolute;
+//   top: 0;
+//   bottom: 0;
+//   left: 0;
+//   right: 0;
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  user-select: none;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   user-select: none;
 
-  &.overlay-enter {
-    opacity: 1;
-  }
-  &.overlay-enter-active {
-    opacity: 0;
-    transition: opacity 300ms;
-  }
-  &.overlay-enter-done {
-    display: none;
-    opacity: 0;
-  }
-  &.overlay-exit {
-    opacity: 0;
-  }
-  &.overlay-exit-active {
-    opacity: 1;
-    transition: opacity 200ms;
-  }
-  &.overlay-exit-done {
-    opacity: 1;
-  }
-`;
+//   &.overlay-enter {
+//     opacity: 1;
+//   }
+//   &.overlay-enter-active {
+//     opacity: 0;
+//     transition: opacity 300ms;
+//   }
+//   &.overlay-enter-done {
+//     display: none;
+//     opacity: 0;
+//   }
+//   &.overlay-exit {
+//     opacity: 0;
+//   }
+//   &.overlay-exit-active {
+//     opacity: 1;
+//     transition: opacity 200ms;
+//   }
+//   &.overlay-exit-done {
+//     opacity: 1;
+//   }
+// `;
 
 const DappContainer = styled.div`
   width: 100%;
@@ -119,21 +117,13 @@ const initialState = {
 
 export function DAPPBrowser({
   dappUrl,
-  dappName,
   theme,
   nanoApp,
   initialAccountId,
   chainConfigs,
 }: DAPPBrowserProps): React.ReactElement {
   const [state, setState] = useState<DAPPBrowserState>(initialState);
-  const {
-    accounts,
-    selectedAccount,
-    clientLoaded,
-    connected,
-    fetchingAccounts,
-    cookiesBlocked,
-  } = state;
+  const { accounts, selectedAccount, cookiesBlocked } = state;
 
   const wrapThirdPartyCookiesErrorHandler =
     <T extends unknown[], R>(cb: (...args: T) => R) =>
@@ -570,7 +560,7 @@ export function DAPPBrowser({
         </ControlBar>
       )}
       <DappContainer>
-        <CSSTransition in={clientLoaded} timeout={300} classNames="overlay">
+        {/* <CSSTransition in={clientLoaded} timeout={300} classNames="overlay">
           <Overlay>
             {!connected ? (
               <Loader>
@@ -598,14 +588,14 @@ export function DAPPBrowser({
               </Loader>
             )}
           </Overlay>
-        </CSSTransition>
-        {connected && accounts.length > 0 ? (
-          <DappIframe
-            ref={iframeRef}
-            src={dappURL.toString()}
-            onLoad={setClientLoaded}
-          />
-        ) : null}
+        </CSSTransition> */}
+        {/* {connected && accounts.length > 0 ? ( */}
+        <DappIframe
+          ref={iframeRef}
+          src={dappURL.toString()}
+          onLoad={setClientLoaded}
+        />
+        {/* ) : null} */}
       </DappContainer>
       {!!accounts.length && (
         <ControlBar mobile>
