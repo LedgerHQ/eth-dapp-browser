@@ -1,6 +1,6 @@
-import Select, { components, OptionTypeBase } from "react-select";
-import React, { useMemo, useCallback } from "react";
 import Image from "next/image";
+import { useCallback, useMemo } from "react";
+import Select, { components, OptionTypeBase } from "react-select";
 import styled, { useTheme } from "styled-components";
 
 import { Account } from "@ledgerhq/live-app-sdk";
@@ -124,9 +124,8 @@ function AccountSelector({
   accounts,
   onAccountChange,
   selectedAccount,
-}: AccountSelectorProps) {
+}: AccountSelectorProps): JSX.Element {
   const theme = useTheme();
-  console.log(theme);
   const options = useMemo(
     () => accounts.map((account) => fromAccountToOption(account)),
     [accounts]
