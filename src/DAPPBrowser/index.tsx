@@ -93,10 +93,10 @@ const DappIframe = styled.iframe`
 type DAPPBrowserProps = {
   dappUrl: string;
   dappName: string;
-  theme?: string;
   nanoApp?: string;
   initialAccountId: string | undefined;
   chainConfigs: ChainConfig[];
+  dappQueryParams: { [x: string]: string | string[] | undefined };
 };
 
 type DAPPBrowserState = {
@@ -120,10 +120,10 @@ const initialState = {
 export function DAPPBrowser({
   dappUrl,
   dappName,
-  theme,
   nanoApp,
   initialAccountId,
   chainConfigs,
+  dappQueryParams,
 }: DAPPBrowserProps): React.ReactElement {
   const [state, setState] = useState<DAPPBrowserState>(initialState);
   const {
@@ -162,11 +162,27 @@ export function DAPPBrowser({
   const dappURL = useMemo(() => {
     const urlObject = new URL(dappUrl);
 
-    if (theme) {
-      urlObject.searchParams.set("theme", theme);
+    /**
+     * Append each dapp specific query param to the url.
+     * This takes into account query params that might be defined multiple times
+     * ex: ?foo=bar&foo=baz
+     */
+    if (dappQueryParams) {
+      Object.entries(dappQueryParams).forEach(([key, val]) => {
+        if (!val) {
+          return;
+        }
+
+        if (Array.isArray(val)) {
+          val.forEach((v) => urlObject.searchParams.append(key, v));
+          return;
+        }
+
+        urlObject.searchParams.append(key, val);
+      });
     }
     return urlObject;
-  }, [dappUrl]);
+  }, [dappUrl, dappQueryParams]);
   const chainConfig = useMemo(
     () =>
       selectedAccount

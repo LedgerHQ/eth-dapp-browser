@@ -1,18 +1,19 @@
-import React from "react";
-import { useRouter } from "next/router";
 import { AppProps } from "next/app";
 import Head from "next/head";
+import { useRouter } from "next/router";
 
-import { GlobalStyle } from "../styles/GlobalStyle";
 import { StyleProvider } from "@ledgerhq/react-ui";
+import { GlobalStyle } from "../styles/GlobalStyle";
 
 import "modern-normalize";
-import { getQueryVariable } from "../src/helpers";
+import { getFirstValueFromArray } from "../src/helpers";
 
 export default function MyApp({ Component, pageProps }: AppProps): JSX.Element {
   const router = useRouter();
 
-  const themeType = (getQueryVariable("theme", router) || "dark") as
+  const { theme } = router.query;
+
+  const themeType = (getFirstValueFromArray(theme) || "dark") as
     | "light"
     | "dark";
 
