@@ -68,6 +68,8 @@ This application is mainly used by Ledger Live to display a Dapp and provide a b
 
 As a Dapp developer, you can use this application through a manifest, as specified on our [developer portal](https://developers.ledger.com/docs/dapp/manifest/), to test the correct integration of your Dapp within Ledger Live.
 
+The list of supported rpc calls can be found in the [receiveDAPPMessage](https://github.com/LedgerHQ/eth-dapp-browser/blob/main/src/DAPPBrowser/index.tsx#:~:text=const-,receiveDAPPMessage,-%3D%20useCallback) function in the `DAPPBrowser` component [index file](src/DAPPBrowser/index.tsx).
+
 Here is an example of a manifest you could use for local test (with the `eth-dapp-browser` accessible on port `3000` and your Dapp accessible on port `4000`):
 
 ```json
