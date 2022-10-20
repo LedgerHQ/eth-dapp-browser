@@ -620,6 +620,7 @@ export function DAPPBrowser({
             ref={iframeRef}
             src={dappURL.toString()}
             onLoad={setClientLoaded}
+            allow="clipboard-read; clipboard-write"
           />
         ) : null}
       </DappContainer>
