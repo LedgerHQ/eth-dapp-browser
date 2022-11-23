@@ -20,6 +20,7 @@ import React, {
 import CSSTransition from "react-transition-group/CSSTransition";
 import styled, { keyframes } from "styled-components";
 import AccountRequest from "../components/AccountRequest";
+import AccountSelector from "../components/AccountSelector";
 import ControlBar from "../components/ControlBar";
 import CookiesBlocked from "../components/CookiesBlocked";
 import { convertEthToLiveTX, stripHexPrefix } from "./helper";
@@ -597,12 +598,15 @@ export function DAPPBrowser({
 
   return (
     <AppLoaderPageContainer>
-      <ControlBar desktop>
-        <AccountRequest
-          selectedAccount={selectedAccount}
-          onRequestAccount={requestAccount}
-        />
-      </ControlBar>
+      {!!accounts.length && (
+        <ControlBar desktop>
+          <AccountSelector
+            selectedAccount={selectedAccount}
+            accounts={accounts}
+            onAccountChange={selectAccount}
+          />
+        </ControlBar>
+      )}
       <DappContainer>
         <CSSTransition in={clientLoaded} timeout={300} classNames="overlay">
           <Overlay>
