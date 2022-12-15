@@ -102,7 +102,6 @@ type DAPPBrowserProps = {
 type DAPPBrowserState = {
   accounts: Account[];
   selectedAccount: Account | undefined;
-  clientLoaded: boolean;
   fetchingAccounts: boolean;
   connected: boolean;
   cookiesBlocked: boolean;
@@ -111,7 +110,6 @@ type DAPPBrowserState = {
 const initialState = {
   accounts: [],
   selectedAccount: undefined,
-  clientLoaded: false,
   fetchingAccounts: false,
   connected: false,
   cookiesBlocked: false,
@@ -129,7 +127,6 @@ export function DAPPBrowser({
   const {
     accounts,
     selectedAccount,
-    clientLoaded,
     connected,
     fetchingAccounts,
     cookiesBlocked,
@@ -456,13 +453,6 @@ export function DAPPBrowser({
     ]
   );
 
-  const setClientLoaded = useCallback(() => {
-    setState((currentState) => ({
-      ...currentState,
-      clientLoaded: true,
-    }));
-  }, [setState]);
-
   const requestAccount = useCallback(async () => {
     const enabledCurrencies = chainConfigs.map(
       (chainConfig) => chainConfig.currency
@@ -596,6 +586,8 @@ export function DAPPBrowser({
     return <CookiesBlocked />;
   }
 
+  const showOverlay = !connected || fetchingAccounts || accounts.length === 0;
+
   return (
     <AppLoaderPageContainer>
       {!!accounts.length && (
@@ -608,7 +600,7 @@ export function DAPPBrowser({
         </ControlBar>
       )}
       <DappContainer>
-        <CSSTransition in={clientLoaded} timeout={300} classNames="overlay">
+        <CSSTransition in={showOverlay} timeout={300} classNames="overlay">
           <Overlay>
             {!connected ? (
               <Loader>
@@ -627,21 +619,13 @@ export function DAPPBrowser({
                   {"Add Account"}
                 </Button>
               </Flex>
-            ) : (
-              <Loader>
-                <Text
-                  variant="h5"
-                  color="neutral.c100"
-                >{`Loading ${dappName} ...`}</Text>
-              </Loader>
-            )}
+            ) : null}
           </Overlay>
         </CSSTransition>
         {connected && accounts.length > 0 ? (
           <DappIframe
             ref={iframeRef}
             src={dappURL.toString()}
-            onLoad={setClientLoaded}
             allow="clipboard-read; clipboard-write"
           />
         ) : null}
