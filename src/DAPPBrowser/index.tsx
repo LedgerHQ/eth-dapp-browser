@@ -117,7 +117,6 @@ const initialState = {
 
 export function DAPPBrowser({
   dappUrl,
-  dappName,
   nanoApp,
   initialAccountId,
   chainConfigs,
