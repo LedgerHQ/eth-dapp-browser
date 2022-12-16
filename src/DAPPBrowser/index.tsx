@@ -17,7 +17,6 @@ import React, {
   useRef,
   useState,
 } from "react";
-import CSSTransition from "react-transition-group/CSSTransition";
 import styled, { keyframes } from "styled-components";
 import AccountRequest from "../components/AccountRequest";
 import AccountSelector from "../components/AccountSelector";
@@ -102,7 +101,6 @@ type DAPPBrowserProps = {
 type DAPPBrowserState = {
   accounts: Account[];
   selectedAccount: Account | undefined;
-  clientLoaded: boolean;
   fetchingAccounts: boolean;
   connected: boolean;
   cookiesBlocked: boolean;
@@ -111,7 +109,6 @@ type DAPPBrowserState = {
 const initialState = {
   accounts: [],
   selectedAccount: undefined,
-  clientLoaded: false,
   fetchingAccounts: false,
   connected: false,
   cookiesBlocked: false,
@@ -119,7 +116,6 @@ const initialState = {
 
 export function DAPPBrowser({
   dappUrl,
-  dappName,
   nanoApp,
   initialAccountId,
   chainConfigs,
@@ -129,7 +125,6 @@ export function DAPPBrowser({
   const {
     accounts,
     selectedAccount,
-    clientLoaded,
     connected,
     fetchingAccounts,
     cookiesBlocked,
@@ -456,13 +451,6 @@ export function DAPPBrowser({
     ]
   );
 
-  const setClientLoaded = useCallback(() => {
-    setState((currentState) => ({
-      ...currentState,
-      clientLoaded: true,
-    }));
-  }, [setState]);
-
   const requestAccount = useCallback(async () => {
     const enabledCurrencies = chainConfigs.map(
       (chainConfig) => chainConfig.currency
@@ -596,6 +584,8 @@ export function DAPPBrowser({
     return <CookiesBlocked />;
   }
 
+  const showOverlay = !connected || fetchingAccounts || accounts.length === 0;
+
   return (
     <AppLoaderPageContainer>
       {!!accounts.length && (
@@ -608,8 +598,9 @@ export function DAPPBrowser({
         </ControlBar>
       )}
       <DappContainer>
-        <CSSTransition in={clientLoaded} timeout={300} classNames="overlay">
-          <Overlay>
+        {
+          showOverlay ? (
+            <Overlay>
             {!connected ? (
               <Loader>
                 <Text color="neutral.c100">{"Connecting ..."}</Text>
@@ -627,21 +618,14 @@ export function DAPPBrowser({
                   {"Add Account"}
                 </Button>
               </Flex>
-            ) : (
-              <Loader>
-                <Text
-                  variant="h5"
-                  color="neutral.c100"
-                >{`Loading ${dappName} ...`}</Text>
-              </Loader>
-            )}
+            ) : null}
           </Overlay>
-        </CSSTransition>
+          ) : null
+        }
         {connected && accounts.length > 0 ? (
           <DappIframe
             ref={iframeRef}
             src={dappURL.toString()}
-            onLoad={setClientLoaded}
             allow="clipboard-read; clipboard-write"
           />
         ) : null}
