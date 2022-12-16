@@ -17,7 +17,6 @@ import React, {
   useRef,
   useState,
 } from "react";
-import CSSTransition from "react-transition-group/CSSTransition";
 import styled, { keyframes } from "styled-components";
 import AccountRequest from "../components/AccountRequest";
 import AccountSelector from "../components/AccountSelector";
@@ -599,8 +598,9 @@ export function DAPPBrowser({
         </ControlBar>
       )}
       <DappContainer>
-        <CSSTransition in={showOverlay} timeout={300} classNames="overlay">
-          <Overlay>
+        {
+          showOverlay ? (
+            <Overlay>
             {!connected ? (
               <Loader>
                 <Text color="neutral.c100">{"Connecting ..."}</Text>
@@ -620,7 +620,8 @@ export function DAPPBrowser({
               </Flex>
             ) : null}
           </Overlay>
-        </CSSTransition>
+          ) : null
+        }
         {connected && accounts.length > 0 ? (
           <DappIframe
             ref={iframeRef}

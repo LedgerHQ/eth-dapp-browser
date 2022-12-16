@@ -1,0 +1,71 @@
+{
+    "id": "lmarket",
+    "name": "[ Ledger ] Market",
+    "private": false,
+    "url": "http://localhost:3000",
+    "params": {
+      "dappUrl": "https://market.ledger.com?embed=1",
+      "nanoApp": "[ L ] Market",
+      "dappName": "[ Ledger ] Market",
+      "networks": [
+        {
+          "currency": "ethereum",
+          "chainID": 1,
+          "nodeURL": "wss://eth-mainnet.ws.alchemyapi.io/v2/0fyudoTG94QWC0tEtfJViM9v2ZXJuij2"
+        }
+      ]
+    },
+    "homepageUrl": "https://market.ledger.com/",
+    "supportUrl": "https://market.ledger.com/",
+    "icon": "https://cdn.live.ledger.com/icons/platform/lmarket.png",
+    "platform": "all",
+    "apiVersion": "^1.0.0 || ~0.0.1",
+    "manifestVersion": "1",
+    "branch": "stable",
+    "categories": [
+      "nft"
+    ],
+    "currencies": [
+      "ethereum"
+    ],
+    "content": {
+      "shortDescription": {
+        "en": "[ Ledger ] Market is the most secure platform for artists and brands to release their NFTs"
+      },
+      "description": {
+        "en": "[ L ] Market is the most secure platform for artists and brands to release their NFTs. For first access to exclusive collaborations, and Ledger hardware, software and services, become a [ Ledger ] Market Pass holder."
+      }
+    },
+    "permissions": [
+      {
+        "method": "account.list",
+        "params": {
+          "currencies": [
+            "ethereum"
+          ]
+        }
+      },
+      {
+        "method": "account.request",
+        "params": {
+          "currencies": [
+            "ethereum"
+          ]
+        }
+      },
+      {
+        "method": "transaction.sign",
+        "params": {
+          "nanoApp": [
+            "[ L ] Market"
+          ]
+        }
+      },
+      {
+        "method": "transaction.broadcast"
+      }
+    ],
+    "domains": [
+      "https://*"
+    ]
+  }
