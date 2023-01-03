@@ -43,7 +43,7 @@ type AccountRequestProps = {
 function AccountRequest({
   onRequestAccount,
   selectedAccount,
-}: AccountRequestProps) {
+}: AccountRequestProps): JSX.Element {
   return (
     <Row>
       <AccountDisplay>
