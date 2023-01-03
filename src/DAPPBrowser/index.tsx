@@ -594,9 +594,8 @@ export function DAPPBrowser({
         />
       </ControlBar>
       <DappContainer>
-        {
-          showOverlay ? (
-            <Overlay>
+        {showOverlay ? (
+          <Overlay>
             {!connected ? (
               <Loader>
                 <Text color="neutral.c100">{"Connecting ..."}</Text>
@@ -616,8 +615,7 @@ export function DAPPBrowser({
               </Flex>
             ) : null}
           </Overlay>
-          ) : null
-        }
+        ) : null}
         {connected && accounts.length > 0 ? (
           <DappIframe
             ref={iframeRef}
