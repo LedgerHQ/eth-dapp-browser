@@ -32,8 +32,10 @@ export default function MyApp({ Component, pageProps }: AppProps): JSX.Element {
         />
       </Head>
       <StyleProvider selectedPalette={themeType} fontsPath="/fonts">
-        <GlobalStyle />
-        <Component {...pageProps} />
+        <>
+          <GlobalStyle />
+          <Component {...pageProps} />
+        </>
       </StyleProvider>
     </>
   );
