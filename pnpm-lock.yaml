@@ -2,7 +2,7 @@ lockfileVersion: 5.4
 
 specifiers:
   '@ledgerhq/live-app-sdk': 0.8.1
-  '@ledgerhq/react-ui': 0.8.1
+  '@ledgerhq/react-ui': ^0.13.0
   '@ledgerhq/ui-shared': ^0.1.10
   '@ledgerhq/wallet-api-client': ^0.15.3
   '@ledgerhq/wallet-api-client-react': ^0.1.1
@@ -40,7 +40,7 @@ specifiers:
 
 dependencies:
   '@ledgerhq/live-app-sdk': 0.8.1
-  '@ledgerhq/react-ui': 0.8.1_hcx6qw6l7iiqminquzlcszwrmq
+  '@ledgerhq/react-ui': 0.13.0_hcx6qw6l7iiqminquzlcszwrmq
   '@ledgerhq/ui-shared': 0.1.10
   '@ledgerhq/wallet-api-client': 0.15.3
   '@ledgerhq/wallet-api-client-react': 0.1.1_react@18.2.0
@@ -409,6 +409,23 @@ packages:
       '@jridgewell/resolve-uri': 3.1.0
       '@jridgewell/sourcemap-codec': 1.4.14
 
+  /@ledgerhq/crypto-icons-ui/0.2.2_3zkem3egtwb2f66cpx4euianji:
+    resolution: {integrity: sha512-S2Kk/miUSyaMrRfYVOBHoIl9Ns1YIsvMTCgSkSrQ5KnGFBdSWuDEFUvhN0UjcNbm+5COsVyYDigPDV6Dv+2zRA==}
+    peerDependencies:
+      '@types/react': '*'
+      react: '*'
+      styled-components: '*'
+      styled-system: '*'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+    dependencies:
+      '@types/react': 17.0.58
+      react: 18.2.0
+      styled-components: 5.3.10_7i5myeigehqah43i5u7wbekgba
+      styled-system: 5.1.5
+    dev: false
+
   /@ledgerhq/devices/8.0.1:
     resolution: {integrity: sha512-8uuyR8DGowYBLatur+MyJtRJ8RYDWSFFqGnNmgBBdlRG6VPf9vjhrFZlmYqukWesPwkZNZstP475W4TS+j6EFw==}
     dependencies:
@@ -430,8 +447,8 @@ packages:
       events: 3.3.0
     dev: false
 
-  /@ledgerhq/icons-ui/0.2.7_3zkem3egtwb2f66cpx4euianji:
-    resolution: {integrity: sha512-qc5pYZMWGaNZz1YPJHTQCm0ePBsJNnZgEg+WkpGJs3dDQXI5OWSUM0mEVguS7JdiR0galyVbHxdJkCytawjEuw==}
+  /@ledgerhq/icons-ui/0.4.0_3zkem3egtwb2f66cpx4euianji:
+    resolution: {integrity: sha512-+MAZ5JLHB5R+yMA+PLss+H1gjBHKq1yhNBR/HdXcOOrH17ks9B/mfp3hgdxzmmkxeVzeWnRapI+Ey/+j4uuM4Q==}
     peerDependencies:
       '@types/react': '*'
       react: '*'
@@ -458,15 +475,16 @@ packages:
     resolution: {integrity: sha512-z+ILK8Q3y+nfUl43ctCPuR4Y2bIxk/ooCQFwZxhtci1EhAtMDzMAx2W25qx8G1PPL9UUOdnUax19+F0OjXoj4w==}
     dev: false
 
-  /@ledgerhq/react-ui/0.8.1_hcx6qw6l7iiqminquzlcszwrmq:
-    resolution: {integrity: sha512-xMaxd+AjKJya1JARGSJUEIQlcf8Eck55B9dnam90ssNT8aK08OpsmeU4QCDkIkvp5l+w62+2tiRvWsNgMTqY0g==}
+  /@ledgerhq/react-ui/0.13.0_hcx6qw6l7iiqminquzlcszwrmq:
+    resolution: {integrity: sha512-qAVlHVbFnLQqph1a5vWAqqSreNzEIv+2kfGCWZ44oy4/KsE0tDQ/JJoCuQzI7wvUBtfrpSm9EjklHg4vzOWM5A==}
     peerDependencies:
-      react: ^17.0.2
-      react-dom: ^17.0.2
+      react: '>=17.0.2'
+      react-dom: '>=17.0.2'
       styled-components: ^5.3.3
     dependencies:
       '@floating-ui/react-dom': 0.4.3_jxbfhcc353tnvyx7rrfhliqaku
-      '@ledgerhq/icons-ui': 0.2.7_3zkem3egtwb2f66cpx4euianji
+      '@ledgerhq/crypto-icons-ui': 0.2.2_3zkem3egtwb2f66cpx4euianji
+      '@ledgerhq/icons-ui': 0.4.0_3zkem3egtwb2f66cpx4euianji
       '@ledgerhq/ui-shared': 0.1.10
       '@tippyjs/react': 4.2.6_biqbaboplfbrettd7655fr4n2y
       '@types/color': 3.0.3
