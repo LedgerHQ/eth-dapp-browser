@@ -48,7 +48,7 @@ declare module "styled-components" {
     fontSizes: number[];
     space: number[];
     shadows: string[];
-    colors: ColorPalette;
+    colors: ColorPalette & { palette: ColorPalette };
     fontWeights: Record<string, string>;
     zIndexes: number[];
   }

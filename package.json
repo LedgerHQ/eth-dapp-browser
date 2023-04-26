@@ -16,6 +16,7 @@
   "dependencies": {
     "@ledgerhq/live-app-sdk": "0.8.1",
     "@ledgerhq/react-ui": "0.8.1",
+    "@ledgerhq/ui-shared": "^0.1.10",
     "@ledgerhq/wallet-api-client": "^0.15.3",
     "@ledgerhq/wallet-api-client-react": "^0.1.1",
     "axios": "^0.21.1",

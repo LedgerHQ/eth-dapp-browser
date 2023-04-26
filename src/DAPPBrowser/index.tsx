@@ -207,12 +207,22 @@ export function DAPPBrowser({
     error?: JSONRPCError;
   };
   const sendResponseToDAPP = ({ id, result, error }: ResponseToDAPP) => {
-    sendMessageToDAPP({
-      id,
-      jsonrpc: JSONRPC,
-      result,
-      error,
-    });
+    if (result) {
+      sendMessageToDAPP({
+        id,
+        jsonrpc: JSONRPC,
+        result,
+      });
+      return;
+    }
+    if (error) {
+      sendMessageToDAPP({
+        id,
+        jsonrpc: JSONRPC,
+        error,
+      });
+      return;
+    }
   };
   const rejectedError = (message: string): JSONRPCError => ({
     code: 3,
