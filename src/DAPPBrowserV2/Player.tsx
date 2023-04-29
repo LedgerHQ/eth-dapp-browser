@@ -146,7 +146,7 @@ export function Player({
     }
 
     if (initialAccount) {
-      return userRequestedAccount;
+      return initialAccount;
     }
 
     if (storedAccount) {
