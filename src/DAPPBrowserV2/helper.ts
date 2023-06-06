@@ -14,10 +14,10 @@ export function convertEthToLiveTX(
     recipient: eip55.encode(ethTX.to),
     maxPriorityFeePerGas: ethTX.maxPriorityFeePerGas
       ? new BigNumber(ethTX.maxPriorityFeePerGas.replace("0x", ""), 16)
-      : new BigNumber(0),
+      : undefined,
     maxFeePerGas: ethTX.maxFeePerGas
       ? new BigNumber(ethTX.maxFeePerGas.replace("0x", ""), 16)
-      : new BigNumber(0),
+      : undefined,
     gasPrice:
       ethTX.gasPrice !== undefined
         ? new BigNumber(ethTX.gasPrice.replace("0x", ""), 16)
