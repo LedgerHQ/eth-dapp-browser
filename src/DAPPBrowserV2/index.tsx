@@ -1,7 +1,13 @@
-import { useAccounts, useCurrencies } from "@ledgerhq/wallet-api-client-react";
-import { useMemo } from "react";
+import {
+  useAccounts,
+  useCurrencies,
+  useWalletAPIClient,
+} from "@ledgerhq/wallet-api-client-react";
+import { useEffect, useMemo } from "react";
 import { Player } from "./Player";
 import { ChainConfig, EVMCurrency } from "./types";
+import { useAnalytics } from "../useAnalytics";
+import { useRouter } from "next/router";
 
 type DappBrowserV2Props = {
   dappUrl: string;
@@ -9,7 +15,9 @@ type DappBrowserV2Props = {
   nanoApp?: string;
   initialAccountId: string | undefined;
   chainConfigs: ChainConfig[];
-  dappQueryParams: { [x: string]: string | string[] | undefined };
+  dappQueryParams: {
+    [x: string]: string | string[] | undefined;
+  };
 };
 
 export function DappBrowserV2(
@@ -19,6 +27,22 @@ export function DappBrowserV2(
 
   const { accounts, loading: loadingAccounts } = useAccounts();
   const { currencies, loading: loadingCurrencies } = useCurrencies();
+  const router = useRouter();
+
+  const { init, page } = useAnalytics();
+  const { client } = useWalletAPIClient();
+
+  useEffect(() => {
+    if (!client) {
+      return;
+    }
+    init(
+      {
+        dappName: props.dappName,
+      },
+      { ip: "0.0.0.0" }
+    ).then(() => void page(router.pathname));
+  }, [client]);
 
   const evmCurrencies = useMemo(() => {
     if (!currencies) {

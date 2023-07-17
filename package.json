@@ -19,6 +19,7 @@
     "@ledgerhq/ui-shared": "^0.1.10",
     "@ledgerhq/wallet-api-client": "^0.15.3",
     "@ledgerhq/wallet-api-client-react": "^0.1.1",
+    "@segment/analytics-next": "^1.53.0",
     "axios": "^0.21.1",
     "bignumber.js": "^9.0.2",
     "color": "^3.1.3",

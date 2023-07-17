@@ -25,16 +25,6 @@ const DappBrowserPage = (): JSX.Element | null => {
   const [mounted, setMounted] = useState(false);
   const router = useRouter();
 
-  useEffect(() => {
-    setMounted(true);
-    return () => setMounted(false);
-  }, []);
-
-  // Early return if the page is not mounted yet
-  if (!mounted) {
-    return null;
-  }
-
   /**
    * We segregate the dapp browser specific query params from the dapp query params.
    */
@@ -71,6 +61,16 @@ const DappBrowserPage = (): JSX.Element | null => {
     dappUrl: string;
     dappName: string;
   } = params;
+
+  useEffect(() => {
+    setMounted(true);
+    return () => setMounted(false);
+  }, [dappName, router]);
+
+  // Early return if the page is not mounted yet
+  if (!mounted) {
+    return null;
+  }
 
   return (
     <WalletAPIProvider transport={transport}>

@@ -2,7 +2,7 @@
   "id": "paraswap-2",
   "name": "Paraswap",
   "private": false,
-  "url": "http://localhost:3002/v2",
+  "url": "http://localhost:3000/v2",
   "params": {
     "dappUrl": "https://app.1inch.io/?ledgerLive=true",
     "nanoApp": "1inch",

@@ -23,6 +23,7 @@ import {
 } from "./helper";
 import { SmartWebsocket } from "./SmartWebsocket";
 import { EVMCurrency } from "./types";
+import { useAnalytics } from "../useAnalytics";
 
 const AppLoaderPageContainer = styled.div`
   height: 100%;
@@ -114,7 +115,6 @@ export function Player({
   nanoApp,
   initialAccountId,
   dappQueryParams,
-
   accounts,
   currencies,
 }: DAPPBrowserProps): React.ReactElement {
@@ -124,6 +124,8 @@ export function Player({
   const { requestAccount, account: userRequestedAccount } = useRequestAccount();
 
   const { client } = useWalletAPIClient();
+
+  const { track } = useAnalytics();
 
   const currentAccount = useMemo(() => {
     const initialAccount = initialAccountId
@@ -379,17 +381,21 @@ export function Player({
             ) {
               try {
                 const params = nanoApp ? { hwAppId: nanoApp } : undefined;
+                void track("EVMDAppBrowser SendTransaction Init");
                 const hash = await client.transaction.signAndBroadcast(
                   currentAccount.id,
                   tx,
                   params
                 );
+                void track("EVMDAppBrowser SendTransaction Success");
+
                 sendMessageToDAPP({
                   id: data.id,
                   jsonrpc: "2.0",
                   result: hash,
                 });
               } catch (error) {
+                void track("EVMDAppBrowser SendTransaction Fail");
                 sendResponseToDAPP({
                   id: data.id,
                   error: rejectedError("Transaction declined"),
@@ -410,16 +416,18 @@ export function Player({
                * We need to strip the "0x" prefix.
                */
               const message = stripHexPrefix(data.params[0]);
-
+              void track("EVMDAppBrowser PersonalSign Init");
               const signedMessage = await client.message.sign(
                 currentAccount.id,
                 Buffer.from(message, "hex")
               );
+              void track("EVMDAppBrowser PersonalSign Success");
               sendResponseToDAPP({
                 id: data.id,
                 result: `0x${signedMessage.toString("hex")}`,
               });
             } catch (error) {
+              void track("EVMDAppBrowser PersonalSign Fail");
               sendResponseToDAPP({
                 id: data.id,
                 error: rejectedError("Personal message signed declined"),
@@ -433,16 +441,18 @@ export function Player({
             try {
               const message = data.params[1];
 
+              void track("EVMDAppBrowser SignTypedData Init");
               const signedMessage = await client.message.sign(
                 currentAccount.id,
                 Buffer.from(message)
               );
-
+              void track("EVMDAppBrowser SignTypedData Success");
               sendResponseToDAPP({
                 id: data.id,
                 result: `0x${signedMessage.toString("hex")}`,
               });
             } catch (error) {
+              void track("EVMDAppBrowser SignTypedData Fail");
               sendResponseToDAPP({
                 id: data.id,
                 error: rejectedError("Typed Data message signed declined"),
