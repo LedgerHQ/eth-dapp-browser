@@ -25,11 +25,7 @@ export function DappBrowserV2(
 ): React.ReactElement | null {
   const { chainConfigs } = props;
 
-  const {
-    accounts,
-    loading: loadingAccounts,
-    updateData: updateAccounts,
-  } = useAccounts();
+  const { accounts, loading: loadingAccounts } = useAccounts();
   const { currencies, loading: loadingCurrencies } = useCurrencies();
   const router = useRouter();
 
@@ -77,12 +73,5 @@ export function DappBrowserV2(
     return null;
   }
 
-  return (
-    <Player
-      {...props}
-      accounts={accounts}
-      updateAccounts={updateAccounts}
-      currencies={evmCurrencies}
-    />
-  );
+  return <Player {...props} accounts={accounts} currencies={evmCurrencies} />;
 }
