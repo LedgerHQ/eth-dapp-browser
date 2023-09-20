@@ -84,8 +84,8 @@ type DAPPBrowserProps = {
   nanoApp?: string;
   initialAccountId: string | undefined;
   dappQueryParams: { [x: string]: string | string[] | undefined };
+
   accounts: Account[];
-  updateAccounts: () => Promise<void>;
   currencies: EVMCurrency[];
 };
 
@@ -115,7 +115,6 @@ export function Player({
   nanoApp,
   initialAccountId,
   dappQueryParams,
-  updateAccounts,
   accounts,
   currencies,
 }: DAPPBrowserProps): React.ReactElement {
@@ -492,7 +491,6 @@ export function Player({
       await requestAccount({
         currencyIds: enabledCurrencyIds,
       });
-      updateAccounts();
     } catch (error) {
       // TODO: handle error
     }
