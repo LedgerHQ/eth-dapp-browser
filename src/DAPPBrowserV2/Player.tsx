@@ -82,7 +82,7 @@ type DAPPBrowserProps = {
   dappUrl: string;
   dappName: string;
   nanoApp?: string;
-  updateAccounts?: () => Promise<void>;
+  updateAccounts: () => Promise<void>;
   initialAccountId: string | undefined;
   dappQueryParams: { [x: string]: string | string[] | undefined };
   accounts: Account[];
