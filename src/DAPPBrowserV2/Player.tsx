@@ -86,6 +86,7 @@ type DAPPBrowserProps = {
   dappQueryParams: { [x: string]: string | string[] | undefined };
 
   accounts: Account[];
+  updateAccounts?: () => Promise<void>;
   currencies: EVMCurrency[];
 };
 
