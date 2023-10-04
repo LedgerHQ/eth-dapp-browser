@@ -82,11 +82,10 @@ type DAPPBrowserProps = {
   dappUrl: string;
   dappName: string;
   nanoApp?: string;
+  updateAccounts?: () => Promise<void>;
   initialAccountId: string | undefined;
   dappQueryParams: { [x: string]: string | string[] | undefined };
-
   accounts: Account[];
-  updateAccounts?: () => Promise<void>;
   currencies: EVMCurrency[];
 };
 
@@ -117,6 +116,7 @@ export function Player({
   initialAccountId,
   dappQueryParams,
   accounts,
+  updateAccounts,
   currencies,
 }: DAPPBrowserProps): React.ReactElement {
   const previousAddressRef = useRef<string | null>(null);
@@ -492,6 +492,7 @@ export function Player({
       await requestAccount({
         currencyIds: enabledCurrencyIds,
       });
+      if (accounts.length === 0 && updateAccounts) updateAccounts();
     } catch (error) {
       // TODO: handle error
     }
