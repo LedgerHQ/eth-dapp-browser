@@ -492,7 +492,9 @@ export function Player({
       await requestAccount({
         currencyIds: enabledCurrencyIds,
       });
-      if (accounts.length === 0 && updateAccounts) updateAccounts();
+      if (accounts.length === 0) {
+        await updateAccounts();
+      }
     } catch (error) {
       // TODO: handle error
     }
