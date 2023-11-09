@@ -56,5 +56,13 @@
   },
   "lint-staged": {
     "*.ts": "pnpm run lint:fix"
+  },
+  "pnpm": {
+    "peerDependencyRules": {
+      "allowedVersions": {
+        "react": "18",
+        "react-dom": "18"
+      }
+    }
   }
 }
