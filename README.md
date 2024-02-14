@@ -66,7 +66,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 This application is mainly used by Ledger Live to display a Dapp and provide a bridge between said Dapp and the Ledger Live client.
 
-As a Dapp developer, you can use this application through a manifest, as specified on our [developer portal](https://developers.ledger.com/docs/dapp/manifest/), to test the correct integration of your Dapp within Ledger Live.
+As a Dapp developer, you can use this application through a manifest, as specified on our [developer portal](https://developers.ledger.com/docs/discover/dapp-browser/manifest), to test the correct integration of your Dapp within Ledger Live.
 
 The list of supported rpc calls can be found in the [receiveDAPPMessage](https://github.com/LedgerHQ/eth-dapp-browser/blob/main/src/DAPPBrowser/index.tsx#:~:text=const-,receiveDAPPMessage,-%3D%20useCallback) function in the `DAPPBrowser` component [index file](src/DAPPBrowser/index.tsx).
 
