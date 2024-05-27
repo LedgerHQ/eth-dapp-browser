@@ -76,7 +76,7 @@ Here is an example of a manifest you could use for local test (with the `eth-dap
 {
   "id": "test-dapp",
   "name": "Test DApp",
-  "url": "http://localhost:3000/",
+  "url": "http://localhost:3000/v2/",
   "params": {
     "dappUrl": "http://localhost:4000/",
     "nanoApp": "Ethereum",
@@ -107,9 +107,9 @@ Here is an example of a manifest you could use for local test (with the `eth-dap
   "homepageUrl": "",
   "supportUrl": "",
   "icon": "",
-  "platform": "all",
-  "apiVersion": "0.0.1",
-  "manifestVersion": "1",
+  "platforms": ["ios", "android", "desktop"],
+  "apiVersion": "^2.0.0",
+  "manifestVersion": "2",
   "branch": "stable",
   "categories": [],
   "currencies": ["ethereum", "bsc"],
@@ -121,8 +121,14 @@ Here is an example of a manifest you could use for local test (with the `eth-dap
       "en": "Test DApp"
     }
   },
-  "permissions": [],
-  "domains": ["https://*"]
+  "permissions": [
+    "account.list",
+    "account.request",
+    "currency.list",
+    "message.sign",
+    "transaction.signAndBroadcast"
+  ],
+  "domains": ["http://", "https://"]
 }
 ```
 
