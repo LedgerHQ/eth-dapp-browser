@@ -1,6 +1,5 @@
-import React from "react";
-import styled from "styled-components";
 import Image from "next/image";
+import styled from "styled-components";
 
 import { Account } from "@ledgerhq/live-app-sdk";
 import { Button, Text } from "@ledgerhq/react-ui";
@@ -37,7 +36,7 @@ const AccountName = styled(Text)`
 
 type AccountRequestProps = {
   onRequestAccount: any;
-  selectedAccount: Account | undefined;
+  selectedAccount: Pick<Account, "currency" | "name"> | undefined;
 };
 
 function AccountRequest({
