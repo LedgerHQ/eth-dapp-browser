@@ -1,10 +1,10 @@
+import { Transport, WindowMessageTransport } from "@ledgerhq/wallet-api-client";
+import { WalletAPIProvider } from "@ledgerhq/wallet-api-client-react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { ChainConfig } from "../src/DAPPBrowser/types";
 import { DappBrowserV2 } from "../src/DAPPBrowserV2";
 import { getFirstValueFromArray } from "../src/helpers";
-import { Transport, WindowMessageTransport } from "@ledgerhq/wallet-api-client";
-import { WalletAPIProvider } from "@ledgerhq/wallet-api-client-react";
 
 function getWalletAPITransport(): Transport {
   if (typeof window === "undefined") {
@@ -55,11 +55,13 @@ const DappBrowserPage = (): JSX.Element | null => {
     nanoApp,
     dappUrl,
     dappName = "DApp",
+    dependencies,
   }: {
     networks: ChainConfig[];
     nanoApp: string;
     dappUrl: string;
     dappName: string;
+    dependencies?: string[];
   } = params;
 
   useEffect(() => {
@@ -79,6 +81,7 @@ const DappBrowserPage = (): JSX.Element | null => {
           <DappBrowserV2
             dappQueryParams={dappQueryParams}
             dappName={dappName}
+            dependencies={dependencies}
             dappUrl={dappUrl}
             nanoApp={nanoApp}
             chainConfigs={chainConfigs}

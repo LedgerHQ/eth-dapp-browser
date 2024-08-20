@@ -3,16 +3,17 @@ import {
   useCurrencies,
   useWalletAPIClient,
 } from "@ledgerhq/wallet-api-client-react";
+import { useRouter } from "next/router";
 import { useEffect, useMemo } from "react";
+import { useAnalytics } from "../useAnalytics";
 import { Player } from "./Player";
 import { ChainConfig, EVMCurrency } from "./types";
-import { useAnalytics } from "../useAnalytics";
-import { useRouter } from "next/router";
 
 type DappBrowserV2Props = {
   dappUrl: string;
   dappName: string;
   nanoApp?: string;
+  dependencies?: string[];
   initialAccountId: string | undefined;
   chainConfigs: ChainConfig[];
   dappQueryParams: {

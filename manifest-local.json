@@ -7,6 +7,7 @@
     "dappUrl": "https://app.1inch.io/?ledgerLive=true",
     "nanoApp": "1inch",
     "dappName": "1inch",
+    "dependencies": ["Paraswap", "Squid"],
     "networks": [
       {
         "currency": "ethereum",

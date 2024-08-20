@@ -16,6 +16,7 @@ import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import styled from "styled-components";
 import AccountRequest from "../components/AccountRequest";
 import ControlBar from "../components/ControlBar";
+import { useAnalytics } from "../useAnalytics";
 import {
   compareEVMAddresses,
   convertEthToLiveTX,
@@ -23,7 +24,6 @@ import {
 } from "./helper";
 import { SmartWebsocket } from "./SmartWebsocket";
 import { EVMCurrency } from "./types";
-import { useAnalytics } from "../useAnalytics";
 
 const AppLoaderPageContainer = styled.div`
   height: 100%;
@@ -82,6 +82,7 @@ type DAPPBrowserProps = {
   dappUrl: string;
   dappName: string;
   nanoApp?: string;
+  dependencies?: string[];
   updateAccounts: () => Promise<void>;
   initialAccountId: string | undefined;
   dappQueryParams: { [x: string]: string | string[] | undefined };
@@ -113,6 +114,7 @@ function saveStoredAccountId(accountId: string) {
 export function Player({
   dappUrl,
   nanoApp,
+  dependencies,
   initialAccountId,
   dappQueryParams,
   accounts,
@@ -120,7 +122,7 @@ export function Player({
   currencies,
 }: DAPPBrowserProps): React.ReactElement {
   const previousAddressRef = useRef<string | null>(null);
-  const previousChainIdRef = useRef<string | null>(null);
+  const previousChainIdRef = useRef<number | null>(null);
 
   const { requestAccount, account: userRequestedAccount } = useRequestAccount();
 
@@ -381,7 +383,9 @@ export function Player({
               currentAccount.address.toLowerCase() === ethTX.from.toLowerCase()
             ) {
               try {
-                const params = nanoApp ? { hwAppId: nanoApp } : undefined;
+                const params = nanoApp
+                  ? { hwAppId: nanoApp, dependencies }
+                  : undefined;
                 void track("EVMDAppBrowser SendTransaction Init");
                 const hash = await client.transaction.signAndBroadcast(
                   currentAccount.id,
