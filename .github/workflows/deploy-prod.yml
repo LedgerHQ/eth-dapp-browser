@@ -1,0 +1,58 @@
+name: deploy-prod
+
+# -> <APP repo>: .github/workflows/deploy-prod.yml
+# Manual prod deploy. Sets the image tag + chart version on the prod ArgoCD app
+# and syncs it. Requires secrets ARGOCD_TOKEN (project developer role token)
+# and var ARGOCD_SERVER. Create the token:
+#   argocd proj role create-token eth-dapp-browser developer
+on:
+  workflow_dispatch:
+    inputs:
+      app_version:
+        description: "Image tag to deploy (semver pushed by build-prod, e.g. 0.1.0)"
+        required: true
+      chart_version:
+        description: "web-app chart version (targetRevision)"
+        required: true
+        default: "0.1.4"
+
+permissions:
+  contents: read
+
+env:
+  ARGOCD_APP: eth-dapp-browser # must equal the Application's metadata.name exactly (NOT "eth-dapp-browser-prod")
+
+jobs:
+  deploy:
+    runs-on: ledgerhq-shared-small
+    timeout-minutes: 15
+    steps:
+      # A writable dir, NOT /usr/local/bin — that's root-owned and not writable on
+      # the self-hosted runner, which fails with:
+      #   curl: (23) Failure writing output to destination
+      - name: Install ArgoCD CLI
+        run: |
+          mkdir -p "$HOME/.local/bin"
+          curl -fsSL -o "$HOME/.local/bin/argocd" \
+            https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
+          chmod +x "$HOME/.local/bin/argocd"
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Deploy
+        env:
+          ARGOCD_SERVER: ${{ vars.ARGOCD_SERVER }}
+          ARGOCD_AUTH_TOKEN: ${{ secrets.ARGOCD_TOKEN }}
+          APP_VERSION: ${{ inputs.app_version }}
+          CHART_VERSION: ${{ inputs.chart_version }}
+        run: |
+          # --source-position 1: the OCI chart is source #1 on a multi-source app
+          # (chart + `ref: values` [+ manifests]) — without it, `argocd app set`
+          # fails with "Source position should be specified and must be greater
+          # than 0 for applications with multiple sources".
+          argocd app set "$ARGOCD_APP" \
+            --source-position 1 \
+            --revision "$CHART_VERSION" \
+            -p image.tag="$APP_VERSION" \
+            --grpc-web
+          argocd app sync "$ARGOCD_APP" --grpc-web
+          argocd app wait "$ARGOCD_APP" --health --timeout 300 --grpc-web
