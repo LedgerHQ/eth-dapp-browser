@@ -23,7 +23,7 @@ env:
 
 jobs:
   build:
-    runs-on: ledgerhq-shared-medium
+    runs-on: public-ledgerhq-shared-medium
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4

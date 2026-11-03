@@ -24,7 +24,7 @@ env:
 
 jobs:
   deploy:
-    runs-on: ledgerhq-shared-small
+    runs-on: public-ledgerhq-shared-medium
     timeout-minutes: 15
     steps:
       # A writable dir, NOT /usr/local/bin — that's root-owned and not writable on
