@@ -1,9 +1,10 @@
 # eth-dapp-browser — Next.js 12 app, built and served with `next start` on :3000.
 # CI: built + pushed to JFrog by .github/workflows/build-prod.yml.
-FROM jfrog.ledgerlabs.net/ossproxy-oci-proxy-dockerio/node:18-slim
+FROM jfrog.ledgerlabs.net/ossproxy-oci-proxy-dockerio/node:26-slim
 
 WORKDIR /app
-RUN corepack enable
+# Node 25+ no longer bundles corepack; install the pnpm version pinned in package.json
+RUN npm install -g pnpm@9.4.0
 
 # NEXT_PUBLIC_* is inlined into the client bundle at build time
 ARG NEXT_PUBLIC_ANALYTICS_WRITE_KEY
